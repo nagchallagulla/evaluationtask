@@ -1,48 +1,71 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
+import List from "./lists";
+
 
 const Autocomplete = () => {
     const [fetchApi, setApi] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchresults] = useState([]);
-    useEffect(() => {
-        axios.get('https://run.mocky.io/v3/4b705c6d-e874-4cb5-8214-262416a7118f').
-            then((Response) => {
-                setApi(Response.data);
-                //console.log(Response.data);
-            },
-                [])
-    })
+    
+ 
+    // useEffect(() => {
+    //     axios.get('https://run.mocky.io/v3/4b705c6d-e874-4cb5-8214-262416a7118f').
+    //         then((Response) => {
+    //             setApi(Response.data);
+    //          //console.log(Response.data);
+    //         },
+    //            [] )
+    // })
+    
     function handleSubmit(e) {
-        e.preventDefault();
-        window.alert('print by id.');
+        
+        window.alert('print successfull.');
       }
+
     const searchData = (value) => {
         setSearchTerm(value);
-
+        axios.get('https://run.mocky.io/v3/4b705c6d-e874-4cb5-8214-262416a7118f').
+        then((Response) => {
+            setApi(Response.data);
+        });
+    
         if (searchTerm !== '') {
             const filterData = fetchApi.filter((item) => {
                 return Object.values(item).join('').toLowerCase().includes(searchTerm.toLowerCase());
             })
             setSearchresults(filterData);
         }
-       
-       else  if (searchTerm ==''){
-        console.log('no data found');
 
-       return <h3 style={{color:'red'}}>No Matching Record Found!</h3>;
+        
+       if(searchResults.length===0){
+        console.log('nodata found');
+       
        }
-        else{
-         setSearchresults(fetchApi);
-        }
-       
+        return(
+            <List searchdResults={searchResults}></List>
+          )
+        
 
+           
+   
+    
     }
+    useEffect=(()=>{
+
+     }, [])
+
     return (
         <>
            <center>
+            <h2>Sports Search</h2>
             <div>
               Typehere:<input type="text" onChange={(e) => searchData(e.target.value)} />
+             
+
             </div>
 
             </center>
@@ -50,20 +73,22 @@ const Autocomplete = () => {
             {searchTerm.length > 1 ? (
                 <ul>
                     {searchResults.map(item => (
-                        //    <><li>{item.label} <img src={item.image} />
-                        //     <div>{item.description}</div></li>
                            <>
-                           <div className="template" key={item.id}>
-                            <h3>{item.label}</h3>
-                            <img src={item.image} alt="" />
-                         <p className="description">{item.description}</p>
-                         <button onClick={handleSubmit} type="submit">print</button>
+                          <div className="col-md-4 mb-4" key={item.id}>
+                          <h5 className="card-title">SearchedList:{item.label}</h5>
+                                           <div class="card">
+                                           
+                                             <img src={item.image} className="card-img-top" alt="..." />
+                                            <div className="card-body">
+                                            <p className="description">{item.description}</p>
+                                           </div>
+                                          </div>
+                                    </div>
+                                    <div>
+                                    <Button variant="primary"   onClick={handleSubmit} type="submit" className='col-lg-02'>print</Button>
                          </div>
                          <div>
-                         <div>
-                             <div className="searchresult">Search Results for : {searchData}</div>
                              <div className="count">Count : {searchResults.length} </div>
-                         </div>
                          </div>
                          </>
                     ))
@@ -73,14 +98,20 @@ const Autocomplete = () => {
             ) : (
                 <ul>
                     {fetchApi.map(item => (
-                        // <li>{item.label} <img src={item.image} />
-                        //     <div>{item.description}</div></li>
+        
                                
-                            <div className="template" key={item.id}>
-                                <h3>{item.label}</h3>
-                            <img src={item.image} alt="" />
-                         <p className="description">{item.description}</p>
-                         </div>
+                        
+                        <div className="col-md-4 mb-4" key={item.id}>
+                                           <div class="card">
+                                           <h5 className="card-title">{item.label}</h5>
+                                             <img src={item.image} className="card-img-top" alt="..." />
+                                            <div className="card-body">
+                                              
+                                              <p className="description">{item.description}</p>
+                                           </div>
+                    
+                                          </div>
+                                    </div>
 
                     ))
 
